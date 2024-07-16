@@ -1,7 +1,16 @@
-import { AuthOptions } from "next-auth";
+import { AuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/app/lib/prisma";
 import bcrypt from "bcrypt";
+
+// Extend the session type to include the id field
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+    } & DefaultSession["user"]
+  }
+}
 
 export const authOptions: AuthOptions = {
   providers: [
