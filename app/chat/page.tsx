@@ -12,7 +12,7 @@ const ChatPage = () => {
 
   React.useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/signin");
+      router.push("/signIn");
     }
   }, [status, router]);
 
