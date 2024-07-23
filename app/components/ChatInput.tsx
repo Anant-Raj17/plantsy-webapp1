@@ -95,7 +95,7 @@ const ChatInput: React.FC = () => {
           <ChatBubble
             key={index}
             message={msg.text}
-            file={msg.image}
+            file={msg.image || undefined}
             isUser={msg.isUser}
           />
         ))}
