@@ -3,7 +3,13 @@
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 
-const ChatBubble = ({ message, file, isUser }) => {
+interface ChatBubbleProps {
+  message: string;
+  file?: File | string;
+  isUser: boolean;
+}
+
+const ChatBubble: React.FC<ChatBubbleProps> = ({ message, file, isUser }) => {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
       <div
