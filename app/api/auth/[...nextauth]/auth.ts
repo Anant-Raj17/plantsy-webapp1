@@ -12,6 +12,13 @@ declare module "next-auth" {
   }
 }
 
+// Extend the JWT type to include the id field
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string;
+  }
+}
+
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
@@ -31,7 +38,7 @@ export const authOptions: AuthOptions = {
           }
         });
 
-        if (!user) {
+        if (!user || !user.password) {
           return null;
         }
 
@@ -52,7 +59,7 @@ export const authOptions: AuthOptions = {
     })
   ],
   pages: {
-    signIn: '/signin',
+    signIn: '/signIn',
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -62,8 +69,8 @@ export const authOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
+      if (session.user && token.id) {
+        session.user.id = token.id;
       }
       return session;
     },
