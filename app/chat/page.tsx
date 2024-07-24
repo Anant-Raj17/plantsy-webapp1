@@ -2,21 +2,32 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useSessionContext } from "@supabase/auth-helpers-react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Navbar from "../components/NavBar";
 import ClientChatWrapper from "./ClientChatWrapper";
 
 const ChatPage = () => {
-  const { isLoading, session } = useSessionContext();
+  const [loading, setLoading] = React.useState(true);
+  const [session, setSession] = React.useState(null);
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
   React.useEffect(() => {
-    if (!isLoading && !session) {
-      router.push("/signIn");
-    }
-  }, [isLoading, session, router]);
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setSession(session);
+      setLoading(false);
+      if (!session) {
+        router.push("/signin");
+      }
+    };
 
-  if (isLoading) {
+    checkSession();
+  }, [router, supabase]);
+
+  if (loading) {
     return <div>Loading...</div>;
   }
 

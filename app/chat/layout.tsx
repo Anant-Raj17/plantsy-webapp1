@@ -14,7 +14,7 @@ export default async function ChatLayout({
   } = await supabase.auth.getSession();
 
   if (!session) {
-    redirect("/signin");
+    redirect("/signIn");
   }
 
   return <>{children}</>;
