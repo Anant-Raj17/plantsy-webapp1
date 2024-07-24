@@ -41,7 +41,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="flex min-h-screen bg-gray-100">
         <div className="m-auto w-full max-w-md">
