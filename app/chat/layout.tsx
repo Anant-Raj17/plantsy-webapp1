@@ -10,7 +10,7 @@ export default async function ChatLayout({
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    redirect("/signin");
+    redirect("/signIn");
   }
 
   return <>{children}</>;
