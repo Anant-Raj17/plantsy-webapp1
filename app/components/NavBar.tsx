@@ -1,16 +1,16 @@
 "use client";
 import Image from "next/image";
-import { signOut } from "next-auth/react";
+
+import { supabase } from "../lib/supabaseClient";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const router = useRouter();
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/"); // Redirect to the landing page
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/signin");
   };
-
   return (
     <div className="p-4 bg-base-100">
       <nav className="navbar bg-primary p-3 rounded-2xl shadow-xl">
@@ -51,7 +51,7 @@ const Navbar = () => {
                 <a className="justify-between">Profile</a>
               </li>
               <li>
-                <a onClick={handleLogout}>Logout</a>
+                <a onClick={handleSignOut}>Logout</a>
               </li>
             </ul>
           </div>

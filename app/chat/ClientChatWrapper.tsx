@@ -1,15 +1,17 @@
 "use client";
 
 import React from "react";
-import { SessionProvider } from "next-auth/react";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import ChatInput from "../components/ChatInput";
-import type { AppProps } from "next/app";
 
 const ClientChatWrapper = () => {
+  const supabase = createClientComponentClient();
+
   return (
-    <SessionProvider>
+    <SessionContextProvider supabaseClient={supabase}>
       <ChatInput />
-    </SessionProvider>
+    </SessionContextProvider>
   );
 };
 

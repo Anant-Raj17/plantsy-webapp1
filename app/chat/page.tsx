@@ -1,27 +1,27 @@
 "use client";
 
 import React from "react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSessionContext } from "@supabase/auth-helpers-react";
 import Navbar from "../components/NavBar";
 import ClientChatWrapper from "./ClientChatWrapper";
 
 const ChatPage = () => {
-  const { status } = useSession();
+  const { isLoading, session } = useSessionContext();
   const router = useRouter();
 
   React.useEffect(() => {
-    if (status === "unauthenticated") {
+    if (!isLoading && !session) {
       router.push("/signIn");
     }
-  }, [status, router]);
+  }, [isLoading, session, router]);
 
-  if (status === "loading") {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (status === "unauthenticated") {
-    return null; // We're redirecting, so we don't need to render anything
+  if (!session) {
+    return null;
   }
 
   return (
