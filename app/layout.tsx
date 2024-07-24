@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 //import { SessionProvider } from "next-auth/react";
 import ClientProvider from "./components/ClientProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 //import { AppProps } from "next/app";
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en" data-theme="mytheme">
       <body>
         <ClientProvider>{children}</ClientProvider>
+        <Analytics />
       </body>
     </html>
   );
