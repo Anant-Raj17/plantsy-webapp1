@@ -14,6 +14,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
+        <meta
+          name="google-site-verification"
+          content="K5tPxXbeG-Yy5g8jvaqgWIZ1bfbq1OENGQWMb40Qk9U"
+        />
         <main>{children}</main>
       </body>
     </html>
