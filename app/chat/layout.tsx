@@ -1,21 +1,21 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default async function RootLayout({
+export default async function ChatLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const supabase = createServerComponentClient({ cookies });
+
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
-      </body>
-    </html>
-  );
+  if (!session) {
+    redirect("/signIn");
+  }
+
+  return <>{children}</>;
 }
