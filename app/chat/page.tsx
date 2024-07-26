@@ -1,35 +1,17 @@
 "use client";
 
-import React from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect } from "react";
 import Navbar from "../components/NavBar";
 import ClientChatWrapper from "./ClientChatWrapper";
 
-const ChatPage = () => {
-  const { isAuthenticated, isLoading } = useAuth0();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push("/signIn");
-    }
-  }, [isLoading, isAuthenticated, router]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
-
+export default function Chat() {
   return (
-    <div className="min-h-screen bg-base-100">
-      <Navbar />
-      <ClientChatWrapper />
+    <div className="flex min-h-screen flex-col items-center justify-center p-24">
+      <div className="min-h-screen bg-base-100">
+        <ClientChatWrapper />
+      </div>
     </div>
   );
-};
-
-export default ChatPage;
+}

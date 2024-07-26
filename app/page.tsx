@@ -1,35 +1,13 @@
-"use client";
-
-import React from "react";
 import Link from "next/link";
-import Navbar from "./components/NavBar";
-import { motion } from "framer-motion";
 
-const LandingPage = () => {
+export default function Home() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <div className="hero min-h-screen bg-base-100">
-        <div className="hero-content text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="max-w-md"
-          >
-            <h1 className="text-5xl font-bold mb-8">
-              AI chatbot to make your plants healthy and alive
-            </h1>
-            <Link href="/signIn" passHref>
-              <button className="btn btn-primary btn-lg rounded-full">
-                Get Started
-              </button>
-            </Link>
-          </motion.div>
-        </div>
-      </div>
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <h1 className="text-4xl font-bold mb-8">Welcome to Plant-Sy</h1>
+      <p className="text-xl mb-8">Keep your plants healthy and alive</p>
+      <Link href="/chat" className="btn btn-primary">
+        Get Started
+      </Link>
+    </main>
   );
-};
-
-export default LandingPage;
+}

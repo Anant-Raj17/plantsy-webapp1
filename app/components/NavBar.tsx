@@ -30,7 +30,6 @@ const Navbar = () => {
             Plant-Sy
           </a>
         </div>
-        <div className="flex-none">{mounted && <Auth0Wrapper />}</div>
       </nav>
     </div>
   );

@@ -1,21 +1,27 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import "../globals.css";
+import { Inter } from "next/font/google";
+import NavBar from "../components/NavBar";
 
-export default async function ChatLayout({
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata = {
+  title: "Plant-Sy Chat",
+  description: "Chat with our AI to keep your plants healthy and alive",
+};
+
+export default function ChatLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createServerComponentClient({ cookies });
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    redirect("/signIn");
-  }
-
-  return <>{children}</>;
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <NavBar />
+        <div className="flex flex-col min-h-screen">
+          <main>{children}</main>
+        </div>
+      </body>
+    </html>
+  );
 }
