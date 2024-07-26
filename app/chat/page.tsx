@@ -2,43 +2,25 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "../components/NavBar";
 import ClientChatWrapper from "./ClientChatWrapper";
-import { Session } from "@supabase/supabase-js";
 
 const ChatPage = () => {
-  const [loading, setLoading] = React.useState(true);
-  const [session, setSession] = React.useState<Session | null>(null);
+  const { isAuthenticated, isLoading } = useAuth0();
   const router = useRouter();
-  const supabase = createClientComponentClient();
 
   React.useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        setSession(session);
-        setLoading(false);
-        if (!session) {
-          router.push("/signin");
-        }
-      } catch (error) {
-        console.error("Error checking session:", error);
-        setLoading(false);
-        router.push("/signin");
-      }
-    };
+    if (!isLoading && !isAuthenticated) {
+      router.push("/signIn");
+    }
+  }, [isLoading, isAuthenticated, router]);
 
-    checkSession();
-  }, [router, supabase]);
-
-  if (loading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!session) {
+  if (!isAuthenticated) {
     return null;
   }
 

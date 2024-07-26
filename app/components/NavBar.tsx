@@ -1,16 +1,20 @@
 "use client";
+import React from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-
-import { supabase } from "../lib/supabaseClient";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const Auth0Wrapper = dynamic(() => import("./Auth0Wrapper"), { ssr: false });
 
 const Navbar = () => {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push("/signin");
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="p-4 bg-base-100">
       <nav className="navbar bg-primary p-3 rounded-2xl shadow-xl">
@@ -26,36 +30,7 @@ const Navbar = () => {
             Plant-Sy
           </a>
         </div>
-        <div className="flex-none">
-          <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 rounded-full">
-                <Image
-                  src="/vercel.svg"
-                  alt="User Profile Picture"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-              </div>
-            </label>
-            <ul
-              tabIndex={0}
-              className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52 z-50 "
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.9)",
-                backdropFilter: "blur(5px)",
-              }}
-            >
-              <li>
-                <a className="justify-between">Profile</a>
-              </li>
-              <li>
-                <a onClick={handleSignOut}>Logout</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <div className="flex-none">{mounted && <Auth0Wrapper />}</div>
       </nav>
     </div>
   );
