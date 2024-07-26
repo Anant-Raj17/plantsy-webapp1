@@ -7,7 +7,7 @@ const AuthenticatedContent = () => {
 
   const handleSignOut = () => {
     if (typeof window !== "undefined") {
-      logout({ returnTo: window.location.origin });
+      logout({ logoutParams: { returnTo: window.location.origin } });
     }
   };
 
