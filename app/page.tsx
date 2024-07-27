@@ -63,6 +63,33 @@ export default function Home() {
           </p>
         </div>
       </div>
+      <footer className="w-full item-center text-center mt-16 text-sm text-gray-600">
+        <p className="mb-2">
+          This project is still under development. More features and
+          improvements coming soon!
+        </p>
+        <p>
+          If you have any feedback, please DM me on{" "}
+          <a
+            href="https://x.com/The_Anant_Raj"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            Twitter
+          </a>{" "}
+          or{" "}
+          <a
+            href="https://www.instagram.com/_plant_sy/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            Instagram
+          </a>
+          .
+        </p>
+      </footer>
     </main>
   );
 }
