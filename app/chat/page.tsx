@@ -1,9 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import Navbar from "../components/NavBar";
 import ClientChatWrapper from "./ClientChatWrapper";
 
 export default function Chat() {

@@ -21,22 +21,10 @@ const ChatInput: React.FC = () => {
   useEffect(scrollToBottom, [messages]);
 
   useEffect(() => {
-    // Clear chat history when the page is reloaded
-    const handleBeforeUnload = () => {
-      sessionStorage.removeItem("chatHistory");
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // Load chat history from sessionStorage on component mount
-    const storedHistory = sessionStorage.getItem("chatHistory");
-    if (storedHistory) {
-      setMessages(JSON.parse(storedHistory));
+    const savedMessages = localStorage.getItem("chatMessages");
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
     }
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
   }, []);
 
   useEffect(() => {

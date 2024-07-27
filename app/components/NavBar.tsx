@@ -1,38 +1,54 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 
-const Auth0Wrapper = dynamic(() => import("./Auth0Wrapper"), { ssr: false });
-
-const Navbar = () => {
-  const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+const NavBar = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
-    <div className="p-4 bg-base-100">
-      <nav className="navbar bg-primary p-3 rounded-2xl shadow-xl">
-        <div className="flex-1">
-          <a className="btn btn-ghost text-3xl text-white">
-            <Image
-              src="/logo-plantsy.png"
-              alt="Plant-sy Logo"
-              width={40}
-              height={40}
-              className="mr-2 font-bold"
-            />
-            Plant-Sy
-          </a>
+    <nav className="bg-primary m-4 p-4 rounded-lg shadow-lg">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link
+          href="/"
+          className="flex items-center text-white text-2xl font-bold"
+        >
+          <Image
+            src="/logo-plantsy.png"
+            alt="Plant-Sy Logo"
+            width={40}
+            height={40}
+            className="mr-2"
+          />
+          Plant-Sy
+        </Link>
+        <div className="relative">
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="text-white bg-primary-focus px-4 py-2 rounded-md border-2"
+          >
+            Menu
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+              <Link
+                href="/chat"
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+              >
+                Chat
+              </Link>
+              <Link
+                href="/journal"
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+              >
+                Journal
+              </Link>
+            </div>
+          )}
         </div>
-      </nav>
-    </div>
+      </div>
+    </nav>
   );
 };
 
-export default Navbar;
+export default NavBar;
