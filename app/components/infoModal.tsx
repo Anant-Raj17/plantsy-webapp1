@@ -34,8 +34,9 @@ export default function InfoModal({ onClose }: InfoModalProps) {
           <>
             <h2 className="text-2xl font-bold mb-4">Plant Care Journal</h2>
             <p className="mb-4">
-              Keep track of your plants' growth and care routines. Log watering
-              schedules, fertilizing, and observations in your digital journal.
+              Keep track of your plant&apos;s growth and care routines. Log
+              watering schedules, fertilizing, and observations in your digital
+              journal.
             </p>
           </>
         )}

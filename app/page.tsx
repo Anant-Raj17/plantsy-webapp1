@@ -58,8 +58,8 @@ export default function Home() {
           />
           <h3 className="text-2xl font-semibold mb-2">Plant Care Journal</h3>
           <p className="text-gray-600">
-            Keep track of your plants' growth and care routines. Log watering
-            schedules, fertilizing, and observations.
+            Keep track of your plant&apos;s growth and care routines. Log
+            watering schedules, fertilizing, and observations.
           </p>
         </div>
       </div>
