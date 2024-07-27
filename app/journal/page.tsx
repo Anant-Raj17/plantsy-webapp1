@@ -39,8 +39,8 @@ export default function Journal() {
       const newEntry: PlantEntry = {
         name: newPlantName,
         image: newPlantImage,
-        wateringFrequency: "Not set",
-        sunlightRequirement: "Not set",
+        wateringFrequency: "",
+        sunlightRequirement: "",
       };
       const updatedEntries = [...entries, newEntry];
       setEntries(updatedEntries);
@@ -48,6 +48,17 @@ export default function Journal() {
       setNewPlantImage(null);
       setNewPlantName("");
     }
+  };
+
+  const updateEntry = (
+    index: number,
+    field: keyof PlantEntry,
+    value: string
+  ) => {
+    const updatedEntries = [...entries];
+    updatedEntries[index][field] = value;
+    setEntries(updatedEntries);
+    localStorage.setItem("plantJournal", JSON.stringify(updatedEntries));
   };
 
   return (
@@ -101,12 +112,9 @@ export default function Journal() {
         </div>
 
         {/* Existing entries */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {entries.map((entry, index) => (
-            <div
-              key={index}
-              className="border-2 border-primary rounded-lg p-4 bg-white"
-            >
+            <div key={index} className="border rounded-lg p-4">
               <Image
                 src={entry.image}
                 alt={entry.name}
@@ -115,8 +123,32 @@ export default function Journal() {
                 className="w-full h-48 object-cover mb-2 rounded-lg"
               />
               <h2 className="text-xl font-semibold">{entry.name}</h2>
-              <p>Watering: {entry.wateringFrequency}</p>
-              <p>Sunlight: {entry.sunlightRequirement}</p>
+              <div className="mt-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Watering Frequency:
+                </label>
+                <textarea
+                  value={entry.wateringFrequency}
+                  onChange={(e) =>
+                    updateEntry(index, "wateringFrequency", e.target.value)
+                  }
+                  className="mt-1 block w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  rows={2}
+                />
+              </div>
+              <div className="mt-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Sunlight Requirement:
+                </label>
+                <textarea
+                  value={entry.sunlightRequirement}
+                  onChange={(e) =>
+                    updateEntry(index, "sunlightRequirement", e.target.value)
+                  }
+                  className="mt-1 block w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  rows={2}
+                />
+              </div>
             </div>
           ))}
         </div>
