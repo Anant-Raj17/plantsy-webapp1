@@ -7,8 +7,9 @@ import Image from "next/image";
 interface PlantEntry {
   name: string;
   image: string;
-  wateringFrequency: string;
-  sunlightRequirement: string;
+  wateringDays: boolean[];
+  sunlightRequirement: number;
+  watered: boolean;
 }
 
 export default function Journal() {
@@ -19,7 +20,16 @@ export default function Journal() {
   useEffect(() => {
     const savedEntries = localStorage.getItem("plantJournal");
     if (savedEntries) {
-      setEntries(JSON.parse(savedEntries));
+      const parsedEntries = JSON.parse(savedEntries);
+      const validatedEntries = parsedEntries.map((entry: PlantEntry) => ({
+        ...entry,
+        wateringDays: Array.isArray(entry.wateringDays)
+          ? entry.wateringDays
+          : [false, false, false, false, false, false, false],
+        watered: entry.watered || false,
+        sunlightRequirement: entry.sunlightRequirement || 1,
+      }));
+      setEntries(validatedEntries);
     }
   }, []);
 
@@ -39,8 +49,9 @@ export default function Journal() {
       const newEntry: PlantEntry = {
         name: newPlantName,
         image: newPlantImage,
-        wateringFrequency: "",
-        sunlightRequirement: "",
+        wateringDays: [false, false, false, false, false, false, false],
+        sunlightRequirement: 1,
+        watered: false,
       };
       const updatedEntries = [...entries, newEntry];
       setEntries(updatedEntries);
@@ -50,16 +61,26 @@ export default function Journal() {
     }
   };
 
-  const updateEntry = (
-    index: number,
-    field: keyof PlantEntry,
-    value: string
-  ) => {
+  const updateEntry = (index: number, field: keyof PlantEntry, value: any) => {
     const updatedEntries = [...entries];
-    updatedEntries[index][field] = value;
+    updatedEntries[index] = { ...updatedEntries[index], [field]: value };
     setEntries(updatedEntries);
     localStorage.setItem("plantJournal", JSON.stringify(updatedEntries));
   };
+
+  const updateWateringDay = (index: number, dayIndex: number) => {
+    const updatedEntries = [...entries];
+    const updatedWateringDays = [...updatedEntries[index].wateringDays];
+    updatedWateringDays[dayIndex] = !updatedWateringDays[dayIndex];
+    updatedEntries[index] = {
+      ...updatedEntries[index],
+      wateringDays: updatedWateringDays,
+    };
+    setEntries(updatedEntries);
+    localStorage.setItem("plantJournal", JSON.stringify(updatedEntries));
+  };
+
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
     <div>
@@ -112,9 +133,23 @@ export default function Journal() {
         </div>
 
         {/* Existing entries */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {entries.map((entry, index) => (
             <div key={index} className="border rounded-lg p-4">
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-xl font-semibold">{entry.name}</h2>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={entry.watered}
+                    onChange={(e) =>
+                      updateEntry(index, "watered", e.target.checked)
+                    }
+                    className="form-checkbox h-4 w-4 text-primary"
+                  />
+                  <span className="ml-2 text-sm">Plant watered</span>
+                </label>
+              </div>
               <Image
                 src={entry.image}
                 alt={entry.name}
@@ -122,32 +157,50 @@ export default function Journal() {
                 height={200}
                 className="w-full h-48 object-cover mb-2 rounded-lg"
               />
-              <h2 className="text-xl font-semibold">{entry.name}</h2>
               <div className="mt-2">
                 <label className="block text-sm font-medium text-gray-700">
-                  Watering Frequency:
+                  Watering Days:
                 </label>
-                <textarea
-                  value={entry.wateringFrequency}
-                  onChange={(e) =>
-                    updateEntry(index, "wateringFrequency", e.target.value)
-                  }
-                  className="mt-1 block w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  rows={2}
-                />
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {daysOfWeek.map((day, dayIndex) => (
+                    <label key={day} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={entry.wateringDays?.[dayIndex] || false}
+                        onChange={() => updateWateringDay(index, dayIndex)}
+                        className="form-checkbox h-4 w-4 text-primary"
+                      />
+                      <span className="ml-2 text-sm">{day}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
               <div className="mt-2">
                 <label className="block text-sm font-medium text-gray-700">
                   Sunlight Requirement:
                 </label>
-                <textarea
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
                   value={entry.sunlightRequirement}
                   onChange={(e) =>
-                    updateEntry(index, "sunlightRequirement", e.target.value)
+                    updateEntry(
+                      index,
+                      "sunlightRequirement",
+                      parseInt(e.target.value)
+                    )
                   }
-                  className="mt-1 block w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  rows={2}
+                  className="range range-primary range-sm"
+                  step="1"
                 />
+                <div className="w-full flex justify-between text-xs px-2">
+                  <span>Inside</span>
+                  <span>Low</span>
+                  <span>Medium</span>
+                  <span>High</span>
+                  <span>Outside</span>
+                </div>
               </div>
             </div>
           ))}
