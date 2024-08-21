@@ -148,20 +148,25 @@ export default function Journal() {
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-            const scaleFactor = Math.min(
-              1,
-              300 / Math.max(img.width, img.height)
-            );
-            canvas.width = img.width * scaleFactor;
-            canvas.height = img.height * scaleFactor;
-            ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-            setNewPlantImage(canvas.toDataURL("image/jpeg", 0.8));
-          };
-          img.src = reader.result as string;
+          if (typeof window !== "undefined") {
+            const img = new window.Image();
+            img.onload = () => {
+              const canvas = document.createElement("canvas");
+              const ctx = canvas.getContext("2d");
+              const scaleFactor = Math.min(
+                1,
+                300 / Math.max(img.width, img.height)
+              );
+              canvas.width = img.width * scaleFactor;
+              canvas.height = img.height * scaleFactor;
+              ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+              setNewPlantImage(canvas.toDataURL("image/jpeg", 0.8));
+            };
+            img.src = reader.result as string;
+          } else {
+            // Handle server-side or non-browser environment
+            setNewPlantImage(reader.result as string);
+          }
         };
         reader.readAsDataURL(file);
       } else {
