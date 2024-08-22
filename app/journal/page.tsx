@@ -1,10 +1,17 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
 import NavBar from "../components/NavBar";
 import Image from "next/image";
 import { FixedSizeGrid as Grid } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { produce } from "immer";
 
 interface PlantEntry {
   name: string;
@@ -15,6 +22,56 @@ interface PlantEntry {
   streak: number;
   lastWateredDate: string | null;
 }
+
+const PlantCard = React.memo(
+  ({
+    entry,
+    updateEntry,
+    setSelectedPlant,
+  }: {
+    entry: PlantEntry;
+    updateEntry: (name: string, field: keyof PlantEntry, value: any) => void;
+    setSelectedPlant: (plant: PlantEntry) => void;
+  }) => {
+    return (
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body p-2 flex flex-col items-center justify-between">
+          <h3 className="card-title text-sm">{entry.name}</h3>
+          <div className="relative w-16 h-16">
+            <Image
+              src={entry.image}
+              alt={entry.name}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-full"
+            />
+          </div>
+          <div className="flex items-center justify-between w-full mt-2">
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text text-xs mr-2">Watered</span>
+                <input
+                  type="checkbox"
+                  checked={entry.watered}
+                  onChange={(e) =>
+                    updateEntry(entry.name, "watered", e.target.checked)
+                  }
+                  className="checkbox checkbox-xs checkbox-primary"
+                />
+              </label>
+            </div>
+            <button
+              className="btn btn-xs btn-primary"
+              onClick={() => setSelectedPlant(entry)}
+            >
+              Details
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
 
 export default function Journal() {
   const [entries, setEntries] = useState<PlantEntry[]>([]);
@@ -122,8 +179,13 @@ export default function Journal() {
   useEffect(() => {
     const checkWateringDays = () => {
       const today = new Date().getDay();
+      const todayString = new Date().toDateString();
       const plantsNeedingWater = entries
-        .filter((entry) => entry.wateringDays[today] && !entry.watered)
+        .filter(
+          (entry) =>
+            entry.wateringDays[today] &&
+            (!entry.watered || entry.lastWateredDate !== todayString)
+        )
         .map((entry) => entry.name);
       setPlantsToWater(plantsNeedingWater);
       setShowToast(plantsNeedingWater.length > 0);
@@ -212,92 +274,86 @@ export default function Journal() {
         }
         saveEntries(updatedEntries);
         updateOverallStreak(updatedEntries);
+
+        // Update selectedPlant if it's the one being modified
+        setSelectedPlant((prevSelected) =>
+          prevSelected && prevSelected.name === name
+            ? { ...prevSelected, [field]: value }
+            : prevSelected
+        );
+
         return updatedEntries;
       });
     },
     [saveEntries, updateOverallStreak]
   );
 
-  const updateWateringDay = useCallback(
-    async (name: string, dayIndex: number) => {
-      setEntries((prevEntries) => {
-        const updatedEntries = prevEntries.map((entry) =>
-          entry.name === name
-            ? {
-                ...entry,
-                wateringDays: entry.wateringDays.map((day, i) =>
-                  i === dayIndex ? !day : day
-                ),
-              }
-            : entry
+  const updateSelectedPlant = useCallback((updatedPlant: PlantEntry) => {
+    setSelectedPlant(updatedPlant);
+    setEntries(
+      produce((draft) => {
+        const index = draft.findIndex(
+          (plant) => plant.name === updatedPlant.name
         );
-        saveEntries(updatedEntries);
-        return updatedEntries;
+        if (index !== -1) {
+          draft[index] = updatedPlant;
+        }
+      })
+    );
+  }, []);
+
+  const updateWateringDay = useCallback(
+    (dayIndex: number) => {
+      if (!selectedPlant) return;
+
+      const updatedPlant = produce(selectedPlant, (draft) => {
+        draft.wateringDays[dayIndex] = !draft.wateringDays[dayIndex];
       });
+
+      updateSelectedPlant(updatedPlant);
+      saveEntries([
+        ...entries.filter((e) => e.name !== updatedPlant.name),
+        updatedPlant,
+      ]);
     },
-    [saveEntries]
+    [selectedPlant, entries, updateSelectedPlant, saveEntries]
   );
 
-  const PlantCard = ({
-    columnIndex,
-    rowIndex,
-    style,
-  }: {
-    columnIndex: number;
-    rowIndex: number;
-    style: React.CSSProperties;
-  }) => {
-    const index = rowIndex * 3 + columnIndex;
-    const entry = entries[index];
-    if (!entry) return null;
+  const PlantCardWrapper = useMemo(
+    () =>
+      ({
+        columnIndex,
+        rowIndex,
+        style,
+      }: {
+        columnIndex: number;
+        rowIndex: number;
+        style: React.CSSProperties;
+      }) => {
+        const index = rowIndex * 3 + columnIndex;
+        const entry = entries[index];
+        if (!entry) return null;
 
-    return (
-      <div
-        style={{
-          ...style,
-          left: `${parseInt(style.left as string) + 8}px`,
-          top: `${parseInt(style.top as string) + 8}px`,
-          width: `${parseInt(style.width as string) - 16}px`,
-          height: `${parseInt(style.height as string) - 16}px`,
-        }}
-        className="card bg-base-100 shadow-xl"
-      >
-        <div className="card-body p-2 flex flex-col items-center justify-between">
-          <h3 className="card-title text-sm">{entry.name}</h3>
-          <div className="relative w-16 h-16">
-            <Image
-              src={entry.image}
-              alt={entry.name}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-full"
+        return (
+          <div
+            style={{
+              ...style,
+              left: `${parseInt(style.left as string) + 8}px`,
+              top: `${parseInt(style.top as string) + 8}px`,
+              width: `${parseInt(style.width as string) - 16}px`,
+              height: `${parseInt(style.height as string) - 16}px`,
+            }}
+          >
+            <PlantCard
+              entry={entry}
+              updateEntry={updateEntry}
+              setSelectedPlant={setSelectedPlant}
             />
           </div>
-          <div className="flex items-center justify-between w-full mt-2">
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text text-xs mr-2">Watered</span>
-                <input
-                  type="checkbox"
-                  checked={entry.watered}
-                  onChange={(e) =>
-                    updateEntry(entry.name, "watered", e.target.checked)
-                  }
-                  className="checkbox checkbox-xs checkbox-primary"
-                />
-              </label>
-            </div>
-            <button
-              className="btn btn-xs btn-primary"
-              onClick={() => setSelectedPlant(entry)}
-            >
-              Details
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
+        );
+      },
+    [entries, updateEntry, setSelectedPlant]
+  );
 
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -381,7 +437,7 @@ export default function Journal() {
                 rowHeight={180}
                 width={width}
               >
-                {PlantCard}
+                {PlantCardWrapper}
               </Grid>
             )}
           </AutoSizer>
@@ -411,9 +467,7 @@ export default function Journal() {
                       <input
                         type="checkbox"
                         checked={selectedPlant.wateringDays[dayIndex]}
-                        onChange={() =>
-                          updateWateringDay(selectedPlant.name, dayIndex)
-                        }
+                        onChange={() => updateWateringDay(dayIndex)}
                         className="checkbox checkbox-xs checkbox-primary"
                       />
                       <span>{day}</span>
@@ -428,13 +482,18 @@ export default function Journal() {
                   min="1"
                   max="5"
                   value={selectedPlant.sunlightRequirement}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const newValue = parseInt(e.target.value);
                     updateEntry(
                       selectedPlant.name,
                       "sunlightRequirement",
-                      parseInt(e.target.value)
-                    )
-                  }
+                      newValue
+                    );
+                    setSelectedPlant({
+                      ...selectedPlant,
+                      sunlightRequirement: newValue,
+                    });
+                  }}
                   className="range range-primary range-xs"
                   step="1"
                 />
@@ -447,6 +506,23 @@ export default function Journal() {
                 </div>
               </div>
               <p className="mt-4">Streak: {selectedPlant.streak} days</p>
+              <div className="mt-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedPlant.watered}
+                    onChange={(e) =>
+                      updateEntry(
+                        selectedPlant.name,
+                        "watered",
+                        e.target.checked
+                      )
+                    }
+                    className="checkbox checkbox-primary"
+                  />
+                  <span>Watered</span>
+                </label>
+              </div>
               <button
                 className="btn btn-primary w-full mt-4"
                 onClick={() => setSelectedPlant(null)}
