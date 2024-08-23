@@ -7,46 +7,46 @@ const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
-    <nav className="bg-primary m-4 p-4 rounded-lg shadow-lg">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link
-          href="/"
-          className="flex items-center text-white text-2xl font-bold"
-        >
-          <Image
-            src="/logo-plantsy.png"
-            alt="Plant-Sy Logo"
-            width={40}
-            height={40}
-            className="mr-2"
-          />
-          Plant-Sy
-        </Link>
-        <div className="relative">
+    <nav className="py-4 relative">
+      <div className="container mx-auto px-6">
+        <div className="bg-green-100 rounded-lg shadow-md flex justify-between items-center p-4">
+          <Link
+            href="/"
+            className="flex items-center text-green-800 text-3xl font-bold"
+          >
+            <Image
+              src="/logo-plantsy.png"
+              alt="Plant-Sy Logo"
+              width={50}
+              height={50}
+              className="mr-3"
+            />
+            Plant-Sy
+          </Link>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="text-white bg-primary-focus px-4 py-2 rounded-md border-2"
+            className="text-white bg-green-600 hover:bg-green-700 px-6 py-3 rounded-full transition duration-300 text-lg font-semibold"
           >
             Menu
           </button>
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
-              <Link
-                href="/chat"
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Chat
-              </Link>
-              <Link
-                href="/journal"
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Journal
-              </Link>
-            </div>
-          )}
         </div>
       </div>
+      {isDropdownOpen && (
+        <div className="absolute right-6 mt-2 w-48 bg-white rounded-lg shadow-lg border border-green-200 z-10">
+          <Link
+            href="/chat"
+            className="block px-4 py-3 text-green-700 hover:bg-green-100 rounded-t-lg"
+          >
+            Chat
+          </Link>
+          <Link
+            href="/journal"
+            className="block px-4 py-3 text-green-700 hover:bg-green-100 rounded-b-lg"
+          >
+            Journal
+          </Link>
+        </div>
+      )}
     </nav>
   );
 };

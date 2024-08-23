@@ -28,7 +28,6 @@ const ChatInput: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Save chat history to sessionStorage whenever it changes
     sessionStorage.setItem("chatHistory", JSON.stringify(messages));
   }, [messages]);
 
@@ -77,7 +76,7 @@ const ChatInput: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 pb-24">
         {messages.map((msg, index) => (
           <ChatBubble
@@ -87,12 +86,16 @@ const ChatInput: React.FC = () => {
             isUser={msg.isUser}
           />
         ))}
-        {isLoading && <div className="text-center">Thinking...</div>}
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-base-100">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-green-50 border-t border-green-200">
         <div className="flex items-center space-x-2 max-w-4xl mx-auto">
-          <label className="btn btn-circle btn-base-100">
+          <label className="text-white bg-green-600 hover:bg-green-700 px-3 py-3 rounded-full transition duration-300">
             <input
               type="file"
               className="hidden"
@@ -123,9 +126,12 @@ const ChatInput: React.FC = () => {
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
             placeholder="Ask about plant care..."
-            className="input input-bordered flex-1"
+            className="input input-bordered flex-1 bg-white text-gray-800"
           />
-          <button onClick={handleSend} className="btn btn-base-100">
+          <button
+            onClick={handleSend}
+            className="text-white bg-green-600 hover:bg-green-700 px-3 py-3 rounded-full transition duration-300"
+          >
             <Image src="/sent-btn.png" alt="Send" width={24} height={24} />
           </button>
         </div>

@@ -34,9 +34,9 @@ const PlantCard = React.memo(
     setSelectedPlant: (plant: PlantEntry) => void;
   }) => {
     return (
-      <div className="card bg-base-100 shadow-xl">
+      <div className="card bg-green-100 shadow-xl">
         <div className="card-body p-2 flex flex-col items-center justify-between">
-          <h3 className="card-title text-sm">{entry.name}</h3>
+          <h3 className="card-title text-sm text-green-800">{entry.name}</h3>
           <div className="relative w-16 h-16">
             <Image
               src={entry.image}
@@ -49,7 +49,9 @@ const PlantCard = React.memo(
           <div className="flex items-center justify-between w-full mt-2">
             <div className="form-control">
               <label className="label cursor-pointer">
-                <span className="label-text text-xs mr-2">Watered</span>
+                <span className="label-text text-xs mr-2 text-green-800">
+                  Watered
+                </span>
                 <input
                   type="checkbox"
                   checked={entry.watered}
@@ -61,7 +63,7 @@ const PlantCard = React.memo(
               </label>
             </div>
             <button
-              className="btn btn-xs btn-primary"
+              className="btn btn-xs text-white bg-primary hover:bg-primary-focus"
               onClick={() => setSelectedPlant(entry)}
             >
               Details
@@ -359,7 +361,6 @@ export default function Journal() {
 
   return (
     <>
-      <NavBar />
       <div className="container mx-auto p-4">
         {showToast && (
           <div className="toast toast-top toast-end">
@@ -378,15 +379,15 @@ export default function Journal() {
             </div>
           </div>
         )}
-        <h1 className="text-4xl font-bold mb-6 text-center">
+        <h1 className="text-4xl font-bold mb-6 text-center text-green-800">
           Plant Care Journal
         </h1>
-        <p className="text-xl mb-6 text-center">
+        <p className="text-xl mb-6 text-center text-green-700">
           Overall Streak: {overallStreak} days
         </p>
 
-        <div className="max-w-md mx-auto mb-8 p-6 bg-base-200 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4 text-center">
+        <div className="max-w-md mx-auto mb-8 p-6 bg-green-100 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold mb-4 text-center text-green-800">
             Add New Plant
           </h2>
           <div className="flex flex-col items-center space-y-4">
@@ -415,11 +416,11 @@ export default function Journal() {
               value={newPlantName}
               onChange={(e) => setNewPlantName(e.target.value)}
               placeholder="Enter plant name"
-              className="input input-bordered w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs bg-white text-gray-800"
             />
             <button
               onClick={addEntry}
-              className="btn btn-primary w-full max-w-xs"
+              className="btn w-full max-w-xs text-white bg-primary hover:bg-primary-focus"
             >
               Add Plant
             </button>
@@ -445,8 +446,8 @@ export default function Journal() {
 
         {selectedPlant && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg max-w-md w-full">
-              <h2 className="text-2xl font-bold text-center mb-4">
+            <div className="bg-green-100 p-6 rounded-lg max-w-md w-full">
+              <h2 className="text-2xl font-bold text-center mb-4 text-green-800">
                 {selectedPlant.name}
               </h2>
               <Image
@@ -457,7 +458,7 @@ export default function Journal() {
                 className="mx-auto rounded-lg"
               />
               <div className="mt-4">
-                <p className="font-semibold">Watering Days:</p>
+                <p className="font-semibold text-green-800">Watering Days:</p>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {daysOfWeek.map((day, dayIndex) => (
                     <label
@@ -470,13 +471,15 @@ export default function Journal() {
                         onChange={() => updateWateringDay(dayIndex)}
                         className="checkbox checkbox-xs checkbox-primary"
                       />
-                      <span>{day}</span>
+                      <span className="text-green-800">{day}</span>
                     </label>
                   ))}
                 </div>
               </div>
               <div className="mt-4">
-                <p className="font-semibold mb-1">Sunlight Requirement:</p>
+                <p className="font-semibold mb-1 text-green-800">
+                  Sunlight Requirement:
+                </p>
                 <input
                   type="range"
                   min="1"
@@ -498,14 +501,16 @@ export default function Journal() {
                   step="1"
                 />
                 <div className="flex justify-between text-xs">
-                  <span>Inside</span>
-                  <span>Low</span>
-                  <span>Medium</span>
-                  <span>High</span>
-                  <span>Outside</span>
+                  <span className="text-green-800">Inside</span>
+                  <span className="text-green-800">Low</span>
+                  <span className="text-green-800">Medium</span>
+                  <span className="text-green-800">High</span>
+                  <span className="text-green-800">Outside</span>
                 </div>
               </div>
-              <p className="mt-4">Streak: {selectedPlant.streak} days</p>
+              <p className="mt-4 text-green-800">
+                Streak: {selectedPlant.streak} days
+              </p>
               <div className="mt-4">
                 <label className="flex items-center space-x-2">
                   <input
@@ -520,11 +525,11 @@ export default function Journal() {
                     }
                     className="checkbox checkbox-primary"
                   />
-                  <span>Watered</span>
+                  <span className="text-green-800">Watered</span>
                 </label>
               </div>
               <button
-                className="btn btn-primary w-full mt-4"
+                className="btn w-full mt-4 text-white bg-primary hover:bg-primary-focus"
                 onClick={() => setSelectedPlant(null)}
               >
                 Close

@@ -20,12 +20,14 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="min-h-screen bg-base-100">
-        {/* Your chat messages will go here */}
+    <main className="flex flex-col items-center justify-between min-h-screen bg-green-50">
+      <div className="w-full max-w-4xl py-8">
+        <h1 className="text-4xl font-bold mb-6 text-center text-green-800">
+          Plant-Sy Chat
+        </h1>
+        <ClientChatWrapper />
       </div>
-      <ClientChatWrapper />
       {showModal && <InfoModal onClose={handleCloseModal} />}
-    </div>
+    </main>
   );
 }

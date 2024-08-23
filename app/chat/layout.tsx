@@ -1,6 +1,5 @@
 import "../globals.css";
 import { Inter } from "next/font/google";
-import NavBar from "../components/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,13 +14,8 @@ export default function ChatLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <NavBar />
-        <div className="flex flex-col min-h-screen">
-          <main>{children}</main>
-        </div>
-      </body>
-    </html>
+    <div className="flex flex-col min-h-screen">
+      <main>{children}</main>
+    </div>
   );
 }

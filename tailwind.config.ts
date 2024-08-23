@@ -21,7 +21,7 @@ const config: Config = {
   daisyui: {
     themes: [{
       mytheme: {
-        "primary": "#19362D",
+        "primary": "#16a34a",
         "secondary": "#f6d860",
         "accent": "#37cdbe",
         "neutral": "#3d4451",

@@ -14,8 +14,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, file, isUser }) => {
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
       <div
         className={`max-w-[70%] ${
-          isUser ? "bg-primary" : "bg-primary"
-        } rounded-lg p-3`}
+          isUser ? "bg-green-500" : "bg-white"
+        } rounded-lg p-3 ${isUser ? "" : "border border-green-200"}`}
       >
         {file && (
           <div className="mb-2">
@@ -28,7 +28,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, file, isUser }) => {
             />
           </div>
         )}
-        <div className={`text-sm ${isUser ? "text-white" : "text-white"}`}>
+        <div className={`text-sm ${isUser ? "text-white" : "text-green-800"}`}>
           <ReactMarkdown>{message}</ReactMarkdown>
         </div>
       </div>
