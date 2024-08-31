@@ -1,7 +1,5 @@
-"use client";
-
 import Image from "next/image";
-import Link from "next/link";
+import GetStartedButton from "./components/GetStartedButton";
 
 export default function Home() {
   return (
@@ -15,12 +13,7 @@ export default function Home() {
           <p className="text-xl mb-6 text-green-600">
             Keep your plants healthy and thriving with expert care advice
           </p>
-          <Link
-            href="/chat"
-            className="text-white bg-green-600 hover:bg-green-700 px-6 py-3 rounded-full transition duration-300 text-lg font-semibold"
-          >
-            Get Started
-          </Link>
+          <GetStartedButton />
         </div>
         <div className="md:w-1/2">
           <Image
