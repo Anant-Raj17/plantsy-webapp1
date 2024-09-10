@@ -7,7 +7,7 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-import NavBar from "../components/NavBar";
+
 import Image from "next/image";
 import { FixedSizeGrid as Grid } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
