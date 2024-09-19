@@ -1,1 +1,0 @@
-// components/GenerativeAIResponse.tsx

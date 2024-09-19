@@ -28,7 +28,7 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <h2 className="text-3xl font-bold mb-8 text-green-800">Our Features</h2>
+      <h1 className="text-3xl font-bold mb-8 text-green-800">Features</h1>
       <div className="grid md:grid-cols-2 gap-8 w-full max-w-6xl">
         {/* AI Chat Card */}
         <div className="bg-white border-2 border-green-200 p-6 rounded-lg shadow-md text-center hover:shadow-lg transition duration-300">
